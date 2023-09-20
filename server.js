@@ -2,6 +2,8 @@ const express=require("express");
 const app=express();
 const fs=require("fs");
 const path=require("path");
+const authRoutes=require("./routing/authroutes");
+
 const cookieparser=require("cookie-parser");
 app.use(cookieparser());
 const session=require("express-session");
@@ -12,6 +14,15 @@ app.use(session({
     secret:'asd3454#$%$@#324',
     cookie:{maxAge:oneday}
 }));
+app.use("/users",auth,authRoutes);
+function auth(req,res,next)
+{
+    if(req.session.username)
+    next();
+else
+res.redirect("/");
+
+}
 app.get("/",(req,res,next)=>{
     if(req.session.username)
     res.redirect("/dashboard");
@@ -22,17 +33,20 @@ else
 })
 app.use(express.static("public"));
 app.use(express.urlencoded());
-app.get("/dashboard",(req,res)=>{
+// app.get("/dashboard",(req,res)=>{
+//     if(req.session.username)
+//     res.sendFile(path.join(__dirname,"./public/dashboard.html"));
+// else
+//     res.redirect("/");
+
+// })
+app.get("/profile",(req,res)=>{
     if(req.session.username)
-    res.sendFile(path.join(__dirname,"./public/dashboard.html"));
+    res.send("Profile")
 else
     res.redirect("/");
+})
 
-})
-app.get("/logout",(req,res)=>{
-    req.session.destroy();
-    res.redirect("/");
-})
 app.post("/login",(req,res)=>{
 
     fs.readFile("users.txt","utf-8",(err,data)=>{
@@ -47,7 +61,7 @@ app.post("/login",(req,res)=>{
     {
         req.session.username="a";
 
-    res.redirect("/dashboard");
+    res.redirect("/users/dashboard");
     }
     })
 })
