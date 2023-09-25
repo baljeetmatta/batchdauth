@@ -2,6 +2,7 @@ const express=require("express");
 const app=express();
 const fs=require("fs");
 const path=require("path");
+app.set("view engine","ejs");
 const authRoutes=require("./routing/authroutes");
 
 const cookieparser=require("cookie-parser");
@@ -46,7 +47,24 @@ app.get("/profile",(req,res)=>{
 else
     res.redirect("/");
 })
+app.get("/login",(req,res)=>{
+    res.render("login",{msg:""});
 
+})
+app.post("/changepassword",(req,res)=>{
+    //1. Old Password
+    fs.readFile("users.txt","utf-8",(err,data)=>{
+        let records=JSON.parse(data);
+        let results=records.filter((item)=>{
+            if(item.username==req.session.username && item.password==req.body.oldpassword)
+            return true;
+        })
+        if(results==0)
+        res.render("changepassword",{msg:"Old password not matched"});
+    else 
+    res.end();
+    });
+})
 app.post("/login",(req,res)=>{
 
     fs.readFile("users.txt","utf-8",(err,data)=>{
@@ -56,11 +74,12 @@ app.post("/login",(req,res)=>{
             return true;
         })
         if(results.length==0)
-        res.send("Invalid user/password");
+       // res.send("Invalid user/password");
+    res.render("login",{msg:"Invalid user/password"})
     else
     {
-        req.session.username="a";
-
+        req.session.username=req.body.username;
+        req.session.name=results[0].Name;
     res.redirect("/users/dashboard");
     }
     })
