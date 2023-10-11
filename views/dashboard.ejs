@@ -1,9 +1,6 @@
-<html>
-    <body>
-        <p>EJS Dashboard</p>
+<%-include("header")%>
         Welcome <%=name%>
         <a href="/users/changepassword">Change Password</a>
         <a href="/users/profile">Profile</a>
         <a href="/users/logout">Logout</a>
-    </body>
-</html>
+        <%-include("footer")%>

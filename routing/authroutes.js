@@ -2,7 +2,7 @@ const express=require("express");
 const path=require("path");
 const router=express.Router();
 router.get("/dashboard",(req,res)=>{
-    res.render("dashboard",{name:req.session.name});
+    res.render("dashboard",{name:req.session.name,username:req.session.username});
 
    // res.sendFile(path.join(__dirname,"../public/dashboard.html"));
 })
