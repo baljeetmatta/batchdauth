@@ -6,6 +6,7 @@
     <th>Name</th>
     <th>Description</th>
     <th>Price</th>
+    <th></th>
 </tr>
         <% products.forEach((item)=>{%>
 
@@ -14,6 +15,7 @@
                 <td><%=item.name%></td>
                 <td><%=item.description%></td>
                 <td><%=item.price%></td>
+                <td><a href="/products/ShowProduct/<%=item._id%>">View</a>/<a href="/products/EditProduct/<%=item._id%>">Edit</a>/<a href="/products/delete/<%=item._id%>">Delete</a></td>
             </tr>
 
         <%})%>

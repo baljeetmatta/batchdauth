@@ -18,8 +18,14 @@ app.use(session({
 }));
 app.use(express.urlencoded());
 const productRoutes=require("./routing/productroute");
-app.use("/products",productRoutes);
-
+app.use("/products",auth,productRoutes);
+function auth(req,res,next)
+{
+    if(req.session.role=="admin")
+    next();
+else
+res.render("auth");
+}
 let dbinstance;
 client.connect("mongodb://127.0.0.1:27017").then((server)=>{
 dbinstance=server.db("EcommD");
